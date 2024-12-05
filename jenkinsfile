@@ -31,7 +31,7 @@ pipeline {
             steps {
                 sshagent(['my_ssh_key']) {
                     sh '''
-                        ansible-playbook -i deploy.yml \
+                        ansible-playbook -i inventory.yml deploy.yml \
                             -e image_name=sug2004/cw2:1.0 \
                             -e replicas=3
                     '''
