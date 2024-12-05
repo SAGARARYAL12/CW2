@@ -31,9 +31,9 @@ pipeline {
 	stage('Deploy') {
 	     steps {
        		sshagent(['my-ssh-key']) {
-                  sh -i Devops/labsuser.pem ubuntu@52.55.102.60
+                  sh
                 '''
-                    ansible-playbook -i inventory.yml home/ubuntu/deploy.yml \
+                    ansible-playbook -i inventory.yml deploy.yml \
                         -e image_name=sug2004/cw2:1.0 \
                         -e replicas=3
                     '''
