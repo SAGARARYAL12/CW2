@@ -1,12 +1,14 @@
-#Dockerfile
-# Use NGINX as the base image
-FROM nginx:latest
+FROM node:latest
 
-# Copy static files to NGINX's HTML directory
-COPY index.html /usr/share/nginx/html/
-COPY linux.png /usr/share/nginx/html/
+# Set the working directory in the container
+WORKDIR /app
 
-# Expose port 80 for NGINX
-EXPOSE 80
+# Copy the application files into the container
+COPY index.html /usr/share/nginx/html
+COPY linux.png /usr/share/nginx/html
 
+# Expose port 8080 (if that's the port your app uses)
+EXPOSE 8080
+
+# Command to run the app (make sure your server.js is present in the context)
 CMD ["node", "server.js"]
