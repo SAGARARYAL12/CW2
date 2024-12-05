@@ -29,7 +29,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sshagent(['ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFhJxP/6qhzlofrjLrtxZ3Y+3DXohGNWNBsvOkFQ+C26 jenkins@ip-172-31-95-54']) {
+                sshagent(['my_ssh_key']) {
                     sh '''
                         ansible-playbook -i deploy.yml \
                             -e image_name=sug2004/cw2:1.0 \
