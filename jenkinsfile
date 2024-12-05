@@ -29,9 +29,9 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sshagent(['jenkins-ssh-key']) {
+                sshagent(['ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFhJxP/6qhzlofrjLrtxZ3Y+3DXohGNWNBsvOkFQ+C26 jenkins@ip-172-31-95-54']) {
                     sh '''
-                        ansible-playbook -i inventory.yml deploy.yml \
+                        ansible-playbook -i deploy.yml \
                             -e image_name=sug2004/cw2:1.0 \
                             -e replicas=3
                     '''
