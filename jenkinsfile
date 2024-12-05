@@ -1,42 +1,42 @@
 pipeline {
- agent any
- environment {
-   DOCKER_HUB_CREDS = credentials('docker')
- }
- stages {
-   stage('Docker Image Build') {
-     steps {
-       sh 'docker build -tag sug2004/cw2:1.0 .'
-     }
-   }
-   stage('Test Docker Image') {
-     steps {
-       sh 'docker image inspect sug2004/cw2:0.1'
-       sh 'docker run --name test-container -d sug2004/cw2:1.0'
-       sh 'docker stop test-container'
-       sh 'docker rm test-container'
-     }
-   }
-   stage('DockerHub Login') {
-     steps {
-       sh 'echo $DOCKER_HUB_CREDS_PSW | docker login -u $DOCKER_HUB_CREDS_USR --password-stdin'
-     }
-   }
-   stage('DockerHub Image Push') {
-     steps {
-       sh 'docker push sug2004/cw2/1.0' 
-     }
-   }
-   stage('Deploy') {
-     steps {
-       sshagent(['jenkins-ssh-key']) {
- 		  sh '''
-                    ansible-playbook -i deploy.yml \
-                        -e image_name=sug2004/cw2:1.0 \
-                        -e replicas=3
-                    '''	
-      }
-     }
-   }
- }
+    agent any
+    environment {
+        DOCKER_HUB_CREDS = credentials('docker')
+    }
+    stages {
+        stage('Docker Image Build') {
+            steps {
+                sh 'docker build --tag sug2004/cw2:1.0 .'
+            }
+        }
+        stage('Test Docker Image') {
+            steps {
+                sh 'docker image inspect sug2004/cw2:1.0'
+                sh 'docker run --name test-container -d sug2004/cw2:1.0'
+                sh 'docker stop test-container'
+                sh 'docker rm test-container'
+            }
+        }
+        stage('DockerHub Login') {
+            steps {
+                sh 'echo $DOCKER_HUB_CREDS_PSW | docker login -u $DOCKER_HUB_CREDS_USR --password-stdin'
+            }
+        }
+        stage('DockerHub Image Push') {
+            steps {
+                sh 'docker push sug2004/cw2:1.0'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sshagent(['jenkins-ssh-key']) {
+                    sh '''
+                        ansible-playbook -i inventory.yml deploy.yml \
+                            -e image_name=sug2004/cw2:1.0 \
+                            -e replicas=3
+                    '''
+                }
+            }
+        }
+    }
 }
