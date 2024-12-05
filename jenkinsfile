@@ -29,7 +29,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sshagent(['my-ssh-key']) {
+                sshagent(['my_ssh_key']) {
                     sh '''
                     # Assuming the deploy.yml and inventory.yml files are in the workspace or transferred here
                     ansible-playbook -i inventory.yml deploy.yml \
