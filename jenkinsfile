@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_HUB_CREDS = credentials('Docker')
+        DOCKER_HUB_CREDS = credentials('Docker')  // Make sure the correct credentials ID is here
     }
     stages {
         stage('Docker Image Build') {
@@ -27,18 +27,16 @@ pipeline {
                 sh 'docker push sug2004/cw2:1.0'
             }
         }
-
-	stage('Deploy') {
-	     steps {
-       		sshagent(['my-ssh-key']) {
-                  sh
-                '''
+        stage('Deploy') {
+            steps {
+                sshagent(['my-ssh-key']) {
+                    sh '''
+                    # Assuming the deploy.yml and inventory.yml files are in the workspace or transferred here
                     ansible-playbook -i inventory.yml deploy.yml \
                         -e image_name=sug2004/cw2:1.0 \
                         -e replicas=3
                     '''
-      }
-
+                }
             }
         }
     }
